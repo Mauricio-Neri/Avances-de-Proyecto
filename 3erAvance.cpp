@@ -1,308 +1,226 @@
-#include <iostream> // Bibliotecas que usa el codigo
-#include <conio.h>
-#include <string.h>
+#include <iostream> // Bibliotecas necesarias para ejecutar el programa. NO ELIMINAR
 #include <string>
-#include <stdio.h>
 #include <fstream>
-#include <stdlib.h>
-#include <string>
 
 using namespace std;
 
-struct Tienda // Uso de estructuras para que el codigo sea mas corto y pueda guardar todos los datos que piden porque las estructuras guardan todo tipo de dato
+struct Tienda
 {
-    string art[100], des[100], clas[100], con[100], gen[100];
-    float prec, tprec, nart;
+    int nart;
+    string art;
+    string des;
+    string gen;
+    string clas;
+    string con;
+    float prec;
+    float tprec;
     char status;
-};
+}; // Uso de estructuras para guardar datos y usarlos en todas las funciones
 
-Tienda* Videojuegos; // Uso de punteros
+Tienda* Videojuegos; // Punteros
 int contador = 0;
 
-void Articulos(); // Declaracion de funciones void
-void Modificacion();
-void Baja();
-void Lista();
-void Archivo();
+void Articulos(); // Para dar de alta los articulos de la tienda, en este caso videojuegos
+void Modificacion(); // Para modificar articulos ya dados de alta
+void Baja(); // Para eliminar articulos
+void Lista(); // Para mostrar la lista de los articulos
+void Archivo(); // Para crear un archivo donde se muestre la lista, una vez hecho se cierra el programa
 
 int main()
 {
     int opcion;
     Videojuegos = new Tienda[100];
 
-    do // Do while para el menu de opciones, asi sea que se ingrese un numero de seleccion incorrecto termine el programa
+    do // Do While para continuar trabajando con el codigo SIEMPRE Y CUANDO no se presione un numero diferente a los que aparecen en el menu
     {
-        cout << "\t ***MENU DE OPCIONES***" << endl;
+        cout << "\t ***MENU DE OPCIONES***" << endl; // Menu de opciones para que el usuario pueda escoger que hacer
         cout << "1. Articulos" << endl;
         cout << "2. Modificacion de Articulos" << endl;
         cout << "3. Baja de Articulos" << endl;
         cout << "4. Lista de Articulos" << endl;
-        cout << "5. Limpiar Pantalla" << endl;
-        cout << "6. Salir" << endl;
+        cout << "5. Limpiar Pantalla" << endl; // Limpia la pantalla eliminando todo lo que se mostro. Aclaro que no se eliminan datos guardados y no se cierra el programa, solo limpia pantalla
+        cout << "6. Salir" << endl; // Aqui se guarda el archivo, una vez que presione salir se generara un archivo para guardar todos los datos ya puestos en el proyecto
         cin >> opcion;
 
         switch (opcion)
         {
-        case 1: // Esta opcion da de alta articulos de la tienda cuando se presiona el numero "1", esta opcion te lleva directo a la funcion void de Articulos donde se ingresaran los articulos
+        case 1:
             Articulos();
             break;
-        case 2: // Esta opcion permite modificar los articulos ya dados de alta cuando se presiona el numero "2", esta opcion te lleva directo a la funcion void de Modificacion donde podras modificar los articulos. No habra modificacion si el articulo no es dado de alta primero
+        case 2:
             Modificacion();
             break;
 
-        case 3: // Esta opcion da de baja/elimina articulos ya dados de alta cuando se presiona el numero "3", esta opcion te lleva directo a la funcion void de Baja donde podras dar de baja los articulos. Solo se podran dar de baja los articulos que ya esten dados de alta y una vez hecho ya no se puede revertir
+        case 3:
             Baja();
             break;
 
-        case 4: // Esta opcion te da la Lista de los articulos ya dados de alta, tambien incluyen los eliminados, cuando se presiona el numero "4", esta opcion te lleva directo a la funcion void de Lista donde podras ver todos los articulos
+        case 4:
             Lista();
             break;
 
-        case 5: // Esta opcion limpia la pantalla al presionar el numero "5" con la funcion de system("cls")
+        case 5:
             system("cls");
             break;
-        case 6: // Esta opcion permite guardar la informacion ya dada por el usuario y cerrando la pantalla simultaneamente al presionar el numero "6", esta opcion te lleva primero a la funcion void de Archivo donde se guardara toda la informacion que el usuario le de al codigo, incluyendo las eliminadas, y despues de guardar todo en un archivo se cierra la pantalla con la funcion exit(1)
+        case 6:
             Archivo();
-            exit(1); // cierra la pantalla
+            exit(1);
             break;
         }
     } while (opcion != 6);
 
-    delete[] Videojuegos; // Liberar la memoria asignada
+    delete[] Videojuegos;
 
     return 0;
 }
 
-void Articulos() // Aqui se ingresan todos los datos de los articulos que desea dar de alta
+void Articulos()
 {
-    cout << "¿Cuántos registros desea dar de alta?" << endl;
+    cout << "Â¿CuÃ¡ntos registros desea dar de alta?" << endl;
     cin >> contador;
     for (int i = 0; i < contador; i++)
     {
-        cout << "Ingrese número del item: ";
+        cout << "Ingrese nÃºmero del item: "; // El item es el articulo o videojuego que se quiera agregar al registro
         cin >> Videojuegos[i].nart;
 
-        cin.ignore(); // Ignorar el salto de línea anterior
+        cin.ignore();
 
         cout << "Ingrese nombre del item: ";
         getline(cin, Videojuegos[i].art);
 
-        cout << "Ingrese descripción del item: ";
+        cout << "Ingrese descripciÃ³n del item: ";
         getline(cin, Videojuegos[i].des);
 
-        cout << "Ingrese genero del item: ";
+        cout << "Ingrese genero del item: "; // El genero se define en cuanto a lo que se trata el juego. En caso de tener mas de un genero, solo precione la tecla de SPACE y agregue el otro genero, preferiblemente la primera letra en Mayuscula para distinguirla
         getline(cin, Videojuegos[i].gen);
 
-        cout << "Ingrese clasificacion del item: ";
+        cout << "Ingrese clasificacion del item: "; // La clasificacion de un videojuego esta definido con una letra y en ocaciones una letra y un numero, pero segun las nuevas regulaciones en Mexico solo se usaran A, B, B15, C, D
         getline(cin, Videojuegos[i].clas);
 
         cout << "Ingrese consola del item: ";
         getline(cin, Videojuegos[i].con);
 
-        cout << "Ingrese precio del item sin el IVA incluido: ";
+        cout << "Ingrese precio del item sin el IVA incluido: "; // El precio con IVA lo generara el codigo
         cin >> Videojuegos[i].prec;
     }
 }
 
-void Lista() // Aqui la funcion te permitira que veas la lista de todos los articulos
+void Lista()
 {
     for (int i = 0; i < contador; i++)
     {
-        if (Videojuegos[i].status == 'E')
+        if (Videojuegos[i].status == 'E') // En caso de que el articulo sea eliminado solo se mostrara que esta eliminado
         {
-            cout << "Articulo eliminado" << endl;
+            cout << "Articulo: " << i + 1 << endl;
+            cout << "Eliminado" << endl;
         }
         else
         {
-            cout << "Articulo: " << i + 1 << endl; // Numero asignado al articulo, este se usara para modificar y eliminar
-            Videojuegos[i].tprec = Videojuegos[i].prec * 1.6; // El precio con el IVA incluido
+            cout << "Articulo: " << i + 1 << endl; // Numero de articulo asignado por el codigo. Este no reemplaza el numero ingresado del item, solo se usa como numeracion para encontrarlo y eliminarlo o modificarlo segun lo que quiera el usuario
+            Videojuegos[i].tprec = Videojuegos[i].prec * 1.16; // Precio con el IVA incluido ya se hace aparte
             cout << "Numero del Item: " << Videojuegos[i].nart << endl;
             cout << "Nombre del Item: " << Videojuegos[i].art << endl;
             cout << "Descripcion del Item: " << Videojuegos[i].des << endl;
             cout << "Genero del Item: " << Videojuegos[i].gen << endl;
             cout << "Clasificacion del Item: " << Videojuegos[i].clas << endl;
             cout << "Consola del Item: " << Videojuegos[i].con << endl;
-            cout << "Precio del Item: " << Videojuegos[i].prec << endl;
+            cout << "Precio del Item sin IVA: " << Videojuegos[i].prec << endl;
             cout << "Precio del Item con IVA: " << Videojuegos[i].tprec << endl;
         }
     }
 }
 
-void Baja() // Aqui los articulos se dan de baja ingresando el numero del articulo proporcionado en la Lista
+void Modificacion()
 {
-    int j;
-    cout << "Ingrese el numero de registro a eliminar: ";
-    cin >> j;
-    j = j - 1;
-    for (int i = j; i == j; i++)
-    {
-        cout << "Eliminando registro " << j + 1 << endl;
-        Videojuegos[i].status = 'E'; // "E" de Eliminado
-        Videojuegos[i].nart = 0;
-        Videojuegos[i].art = "";
-        Videojuegos[i].des = "";
-        Videojuegos[i].gen = "";
-        Videojuegos[i].clas = "";
-        Videojuegos[i].con = "";
-        Videojuegos[i].prec = 0;
-        Videojuegos[i].tprec = 0;
-    }
-}
-
-void Modificacion() // Aqui los articulos se pueden modificar ingresando el numero del articulo proporcionado por la lista
-{
-    int j, opcion, op2;
-    do
-    {
-        cout << "Ingrese numero del registro que desea modificar: ";
-        cin >> j;
-        j = j - 1; // i comienza en 0, por lo tanto se le tiene que restar al numero ingresado para que no haya problemas. Esto no afectara articulos que no se desean eliminar, asi que no hay de que preocuparse
-
-        for (int i = j; i == j; i++)
-        {
-            if (Videojuegos[i].status == 'E') // Validacion en caso de que el articulo sea eliminado
-            {
-                cout << "Registro eliminado" << endl;
-                cout << "Ingrese un registro VALIDO" << endl;
-                op2 = 1;
-            }
-            else
-            {
-                op2 = 2;
-            }
-        }
-    } while (op2 == 1);
-
-    cout << "Ingrese la opcion que desea modificar:" << endl;
-    cout << "1. Numero del item" << endl;
-    cout << "2. Nombre del Item" << endl;
-    cout << "3. Descripcion del Item" << endl;
-    cout << "4. Genero del Item" << endl;
-    cout << "5. Clasificacion del Item" << endl;
-    cout << "6. Consola" << endl;
-    cout << "7. Precio" << endl;
-    cin >> opcion;
-
-    switch (opcion)
-    {
-    case 1:
-        for (int i = j; i == j; i++)
-        {
-            cout << "Ingrese nuevo numero del item: ";
-            cin >> Videojuegos[i].nart;
-        }
-        break;
-    case 2:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese nuevo nombre del item: ";
-            getline(cin, Videojuegos[i].art);
-        }
-        break;
-
-    case 3:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese nueva descripcion del item: ";
-            getline(cin, Videojuegos[i].des);
-        }
-        break;
-    case 4:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese nuevo genero del item: ";
-            getline(cin, Videojuegos[i].gen);
-        }
-        break;
-
-    case 5:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese nueva clasificacion del item: ";
-            getline(cin, Videojuegos[i].clas);
-        }
-        break;
-
-    case 6:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese consola del item: ";
-            getline(cin, Videojuegos[i].con);
-        }
-        break;
-
-    case 7:
-        for (int i = j; i == j; i++)
-        {
-            cin.ignore(); // Ignorar el salto de línea anterior
-            cout << "Ingrese nuevo precio del item sin IVA: ";
-            cin >> Videojuegos[i].prec; // El precio sin el IVA
-            Videojuegos[i].tprec = Videojuegos[i].prec * 1.6; // El precio con el IVA incluido
-        }
-        break;
-    }
-}
-
-void Archivo() // Aqui se guardan todos los datos del programa
-{
-    ofstream archivo; //clase ofstream para escribir archivos
-    string nombrearchivo;
-    int texto;
-    string texto2;
-
-    nombrearchivo = "articulostienda.txt";
-
-    archivo.open(nombrearchivo.c_str(), ios::out);
-
-    if (!archivo)
-    {
-        cout << "ERROR: No se pudo crear el archivo" << endl;
-        exit(1);
-    }
-
-    archivo << "NUMERO DE ITEM" << "\t";
-    archivo << "NOMBRE ARTICULO" << "\t";
-    archivo << "DESCRIPCION" << "\t";
-    archivo << "GENERO" << "\t";
-    archivo << "CLASIFICACION" << "\t";
-    archivo << "CONSOLA" << "\n";
-    archivo << "PRECIO" << "\n";
-    archivo << "PRECIO CON IVA" << "\n";
-    archivo << "STATUS" << "\n";
-
+    int num, j;
+    bool encontrado = false; // Variable condicional para que no se ejecute en caso de ser falso
+    cout << "Ingrese el nÃºmero del artÃ­culo que desea modificar: ";
+    cin >> num; // Recuerde checar Lista para saber que numero de articulo es, y ese numero es el asignado por el codigo
     for (int i = 0; i < contador; i++)
     {
-        if (Videojuegos[i].status == 'E')
+        if (Videojuegos[i].nart == num && Videojuegos[i].status != 'E')
         {
-            texto2 = "REGISTRO ELIMINADO ";
-            texto = i;
-            archivo << texto2 << texto << "\n";
-        }
-        else
-        {
-            texto = Videojuegos[i].nart;
-            archivo << texto << "\t" << "\t";
-            texto2 = Videojuegos[i].art;
-            archivo << texto2 << "\t" << "\t";
-            texto2 = Videojuegos[i].des;
-            archivo << texto2 << "\t " << "\t";
-            texto2 = Videojuegos[i].gen;
-            archivo << texto2 << "\t " << "\t";
-            texto2 = Videojuegos[i].clas;
-            archivo << texto2 << "\t " << "\t";
-            texto2 = Videojuegos[i].con;
-            archivo << texto2 << "\t " << "\t";
-            texto = Videojuegos[i].prec;
-            archivo << texto << "\t " << "\t";
-            texto = Videojuegos[i].tprec;
-            archivo << texto << "\t " << "\t";
+            encontrado = true;
+            cout << "NÃºmero de Articulo: " << Videojuegos[i].nart << endl; // Se muestran los datos puestos en el articulo para que el usuario pueda modificar solo lo que se quiere modificar, en caso de querer dejarlo igual solo se debe de reescribir en el apartado que se desea dejar igual
+            cout << "Nombre del Articulo: " << Videojuegos[i].art << endl;
+            cout << "DescripciÃ³n del Articulo: " << Videojuegos[i].des << endl;
+            cout << "Genero del Articulo: " << Videojuegos[i].gen << endl;
+            cout << "Clasificacion del Articulo: " << Videojuegos[i].clas << endl;
+            cout << "Consola del Articulo: " << Videojuegos[i].con << endl;
+            cout << "Precio del Articulo sin IVA: " << Videojuegos[i].prec << endl;
+            cout << "Precio del Articulo con IVA: " << Videojuegos[i].tprec << endl;
+
+            cout << "\nIngrese los nuevos datos: " << endl;
+            cout << "Ingrese nuevo nÃºmero del item: ";
+            cin >> Videojuegos[i].nart;
+
+            cin.ignore();
+
+            cout << "Ingrese nuevo nombre del item: "; // En caso de no querer modificar se reescriben los datos que pusiste. En caso de modificarse se elimina la informacion anterior y es reemplazada por la nueva
+            getline(cin, Videojuegos[i].art);
+
+            cout << "Ingrese nueva descripciÃ³n del item: ";
+            getline(cin, Videojuegos[i].des);
+
+            cout << "Ingrese nuevo genero del item: ";
+            getline(cin, Videojuegos[i].gen);
+
+            cout << "Ingrese nueva clasificacion del item: ";
+            getline(cin, Videojuegos[i].clas);
+
+            cout << "Ingrese nueva consola del item: ";
+            getline(cin, Videojuegos[i].con);
+
+            cout << "Ingrese nuevo precio del item sin el IVA incluido: ";
+            cin >> Videojuegos[i].prec;
+
+            cout << "ArtÃ­culo modificado con Ã©xito." << endl;
+            break;
         }
     }
+    if (!encontrado) // En caso de no encontrar el articulo se recomienda
+    {
+        cout << "ArtÃ­culo no encontrado." << endl;
+    }
+}
 
+void Baja()
+{
+    int num;
+    bool encontrado = false;
+    cout << "Ingrese el nÃºmero del artÃ­culo que desea dar de baja: ";
+    cin >> num;
+    for (int i = 0; i < contador; i++)
+    {
+        if (Videojuegos[i].nart == num && Videojuegos[i].status != 'E')
+        {
+            encontrado = true;
+            Videojuegos[i].status = 'E';
+            cout << "ArtÃ­culo dado de baja con Ã©xito." << endl; // Una vez dado de baja el articulo no se puede recuperar. En caso de no querer eliminar el articulo solo escriba un numero que no tenga un articulo asignado. RECOMENDACION: Checar la lista los numeros de los articulos
+            break;
+        }
+    }
+    if (!encontrado)
+    {
+        cout << "ArtÃ­culo no encontrado." << endl;
+    }
+}
+
+void Archivo()
+{
+    ofstream archivo;
+    string nombreArchivo = "articulostienda.txt";
+
+    archivo.open(nombreArchivo.c_str(), ios::out | ios::binary);
+
+    if (!archivo) // En caso de que el archivo no se abra
+    {
+        cout << "No se pudo abrir el archivo." << endl;
+        return;
+    }
+
+    archivo.write(reinterpret_cast<const char*>(Videojuegos), sizeof(Tienda) * contador);
     archivo.close();
+
+    cout << "Datos guardados en el archivo correctamente." << endl;
 }
